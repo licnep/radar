@@ -1,0 +1,260 @@
+<?php
+
+#$codalfa = $_GET['codalfa'];
+#$indicatore = $_GET['indicatore'];
+
+#$data['codalfa'] = "A2A";
+#$data['indicatore'] = "totalturnover";
+$codalfa = "A2A";
+$indicatore = "totalturnover";
+?>  
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/black.js"></script>
+
+<div class="panel">
+    <ul class="nav nav-tabs">
+    <!-- Num.Trade 30	Contr.Medio 30	Market Delta 30	Market Buy % 30	Volatilità	Spread 30	Impatto Book	Impatto Buy	Impatto Sell -->
+      <li role="presentation" class="active"><a href="#">Controvalore totale</a></li>
+      <li role="presentation"><a href="#">Controvalore30</a></li>
+      <li role="presentation"><a href="#">Controvalore medio</a></li>
+      <li role="presentation"><a href="#">Buy %</a></li>
+      <li role="presentation"><a href="#">Volatilità</a></li>
+      <li role="presentation"><a href="#">Spread</a></li>
+      <li role="presentation"><a href="#">Impatto buy</a></li>
+      <li role="presentation"><a href="#">Impatto sell</a></li>
+    </ul>
+
+    <div id="chartdiv" style="width:100%;min-height:500px;"></div>
+</div>
+
+<!-- Chart code -->
+<script>
+var chart = AmCharts.makeChart("chartdiv", {
+    "type": "serial",
+    "theme": "black",
+    "marginRight": 40,
+    "marginLeft": 100,
+    "marginTop": 20,
+    "autoMarginOffset": 20,
+    "mouseWheelZoomEnabled":true,
+    "dataDateFormat": "YYYY-MM-DD HH:NN:SS",
+    "hideYScrollbar":true,
+    "valueAxes": [{
+        "id": "v1",
+        "axisAlpha": 0,
+        "position": "left",
+        "ignoreAxisWidth":true,
+        "unit": "€"
+    }],
+    "balloon": {
+        "borderThickness": 1,
+        "cornerRadius": 0,
+        "shadowAlpha": 0,
+        "fillColor":"#fdd",
+        "fillAlpha":"1.0"
+    },
+    "graphs": [{
+        "id": "g1",
+        /*"balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },*/
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "red line",
+        "useLineColorForBulletBorder": true,
+        "valueField": "value",
+        //"balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+        "balloonText": "[[category]]<br><b>[[value]] €</b>",
+    },{
+        "id": "g2",
+        /*"balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },*/
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "blue line",
+        "useLineColorForBulletBorder": true,
+        "valueField": "value2",
+        "balloonText": "[[category]]<br><b>[[value]] €</b>",
+        //"balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+    }],
+    "chartScrollbar": {
+        "graph": "g1",
+        "oppositeAxis":false,
+        "offset":30,
+        "scrollbarHeight": 80,
+        "backgroundAlpha": 0,
+        "selectedBackgroundAlpha": 0.1,
+        "selectedBackgroundColor": "#888888",
+        "graphFillAlpha": 0,
+        "graphLineAlpha": 0.5,
+        "selectedGraphFillAlpha": 0,
+        "selectedGraphLineAlpha": 1,
+        "autoGridCount":true,
+        "color":"#AAAAAA"
+    },
+    "chartScrollbarSettings": {
+    "graph": "g1",
+    "usePeriod": "ss",
+    "position": "top"
+  },
+    "chartCursor": {
+        "pan": true,
+        "valueLineEnabled": true,
+        "valueLineBalloonEnabled": true,
+        "cursorAlpha":1,
+        "cursorColor":"#258cbb",
+        "limitToGraph":"g1",
+        "valueLineAlpha":0.2,
+        "valueZoomable":true,
+        "categoryBalloonDateFormat": "JJ:NN",
+    },/*
+    "valueScrollbar":{
+      "oppositeAxis":false,
+      "offset":50,
+      "scrollbarHeight":10
+    },*/
+    "categoryField": "date",
+    "categoryAxis": {
+        "parseDates": true,
+        "dashLength": 1,
+        "minorGridEnabled": true,
+        "minPeriod": "ss"
+    },
+    "categoryAxesSettings": {
+        "minPeriod": "ss"
+    },
+    "export": {
+        "enabled": false
+    },
+    "dataProvider": []
+ 
+});
+
+var all_data = [
+    <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "zxcvbnm";
+        $dbname = "hedgefund";
+
+        $lastdate = "";
+
+        // Create connection
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        // Check connection
+        if ($conn->connect_error) {
+             die("Connection failed: " . $conn->connect_error);
+        } 
+
+
+        $sql = "SELECT timestamp, ".$indicatore." FROM indicatoridaily WHERE codalfa='".$codalfa."' and timestamp>(select DATE_FORMAT((SELECT max(timestamp) FROM indicatoridaily where codalfa='".$codalfa."'), '%Y-%m-%d 09:00:59')) order by timestamp";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $lastdate = $row['timestamp'];
+                echo '{"date": "' . $row['timestamp'] . '","value": ' . $row[$indicatore] . "},\n";
+            }
+        } else {
+             echo "0 results";
+        }
+    ?>
+];
+
+var historical_data = [
+    <?php
+        $sql = "SELECT ".$indicatore.", timewindow AS timewindow FROM indicatoristorici WHERE codalfa='".$codalfa."' ORDER BY timewindow"; //timewindow <= TIME(timestamp) AND
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                //echo '{"date": "' . $row['timewindow'] . '","value": ' . $row[$indicatore] . ',"value2": ' .  $row['storico'] . "},\n";
+                echo '{"date": "' . substr($lastdate, 0,11) . $row['timewindow'] . '","value2": ' . $row[$indicatore] . "},\n";
+            }
+        }
+        $conn->close();
+    ?>
+];
+
+chart.dataProvider = historical_data;
+
+var daily_data = all_data.splice(0,30);
+
+//chart.dataProvider = chart.dataProvider.concat( all_data.splice(0,30) );
+//chart.dataProvider = chart.dataProvider.concat( daily_data );
+
+//chart.dataProvider = chart.dataProvider.concat( historical_data );
+
+function combine_data() {
+    var d = [];
+    d = daily_data.concat(historical_data);
+    return d;
+}
+
+//prevent new data from resetting the chart zoom:
+
+chart.ignoreZoomed = false;
+chart.addListener("zoomed", function(event) {
+  if (chart.ignoreZoomed) {
+    chart.ignoreZoomed = false;
+    return;
+  }
+  /*console.log(event.endDate);
+  var lastDate = chart.dataProvider[chart.dataProvider.length-1];
+  console.log(lastDate);
+  if (event.endDate ==   lastDate) {
+      console.log("UGUALIII");
+  }*/
+  chart.zoomStartDate = event.startDate;
+  chart.zoomEndDate = event.endDate;
+});
+
+chart.addListener("dataUpdated", function(event) {
+  //console.log(chart.zoomStartDate);
+    if (chart.zoomStartDate) {
+      chart.zoomToDates(chart.zoomStartDate, chart.zoomEndDate);
+    }
+});
+
+setInterval( function() {
+  //chart.dataProvider.shift();
+    daily_data.push( all_data.shift() );
+
+    //chart.dataProvider.push( all_data.shift() );
+    chart.dataProvider = combine_data();
+
+/*
+  // add new one at the end
+  day++;
+  var newDate = new Date( firstDate );
+  newDate.setDate( newDate.getDate() + day );
+  var visits = Math.round( Math.random() * 40 ) - 20;
+  chart.dataProvider.push( {
+    date: newDate,
+    visits: visits
+  } );*/
+  chart.ignoreZoomed = true;
+  chart.validateData();
+}, 1000 );
+
+</script>
+

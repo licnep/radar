@@ -1,0 +1,108 @@
+<?php echo $this->fetch("header.phtml", $data); ?>
+
+<?php if (!$subscription || $subscription['subscription_status'] == 'terminated') { ?>
+
+<div style="margin:auto;width:100%;text-align:center;background-color:#085f9c;border-color:#000a79" class="alert alert-info" role="alert">
+<!--<h4>La tua <a href="./subscription">sottoscrizione</a> e' inattiva o scaduta. Clicca <a href="./subscription">qui</a> per rinnovarla.</h4>-->
+Account di prova. Le quotazioni sono in ritardo di 30 minuti. <a href="./subscription">Iscriviti</a>  per ottenerle in real-time.
+</div>
+
+   
+<?php  } else { ?>
+
+    <ul class="breadcrumb">
+        <li><a href="<?php echo $www?>">Home</a></li>
+        <li class="active">Dashboard</li>
+    </ul>
+
+<?php if ($subscription['subscription_status'] == 'cancelled') { ?>
+
+<div style="margin:auto;width:100%;text-align:center;margin-top:50px;">
+<p>Abbonamento cancellato. Hai ancora accesso fino a:  <?php echo date('D, j M Y', $subscription['next_payment']);?></p>
+</div>
+
+<?php }} ?>
+
+    <div>
+
+      <div class="panel col-md-3" style="background-color:#333;height:600px;">
+          <div class="btn-group btn-group-justified">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn" id="ftse-mib">FTSE MIB</button>
+            </div>
+            
+            <div class="btn-group" role="group">
+              <button type="button" class="btn" id="mid-cap">MID CAP</button>
+            </div>
+          </div>
+          <div class="sidebar" data-simplebar>
+            <?php echo $this->fetch("sidebar.phtml", $data); ?>
+          </div>
+      </div>
+      <!--<div class="col-md-9 name">
+        <h3>A2A</h3>
+      </div>-->
+      <div class="col-md-9 graph">
+          <?php echo $this->fetch("chartStock.phtml", $data); ?>
+      </div>
+
+      <div class="col-md-9 data">
+        <script src="<?php echo $www?>public/js/jquery.rss.min.js"></script>
+        <div id="rss-feeds"></div>
+        <script>
+          var feedbar = null;
+          $("#rss-feeds").rss("http://www.ansa.it/sito/notizie/economia/economia_rss.xml",
+          {
+            limit: 20,
+            entryTemplate:'<li>{date} - <a href="{url}" target="about:blank"><span class="upper">{title}</span> - {shortBodyPlain}</a></li>',
+            layoutTemplate: "<ul class='list-unstyled'>{entries}</ul>",
+            dateFormat: 'DD/MM/YYYY HH:mm',
+            success: function() {feedbar = new SimpleBar($('#rss-feeds')[0]);}
+          });
+        </script>
+         <!-- commenti facebook 
+        <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/it_IT/sdk.js#xfbml=1&version=v2.10&appId=1706368099656498";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+           <div class="fb-comments" data-href="http://radar.zeygos.com/dashboard" data-width="100%" data-numposts="5" data-colorscheme="dark"></div>
+         -->
+      </div>
+    </div>
+
+<?php //} ?>
+
+<?php echo $this->fetch("footer.phtml", $data); ?>
+
+<script>
+  $ftseMib = $('.ftse-mib')
+  $midCap = $('.mid-cap')
+
+  $("#ftse-mib").on("click", function() {
+      $midCap.hide()
+      $ftseMib.show()
+      $(this).addClass("btn-active")
+      $("#mid-cap").removeClass("btn-active")
+      $(".sidebar ul li:nth-child(2) a").css("border-top", "1px solid #333")
+  });
+
+  $("#mid-cap").on("click", function() {
+      $ftseMib.hide()
+      $midCap.show()
+      $(this).addClass("btn-active")
+      $("#ftse-mib").removeClass("btn-active")
+      $(".sidebar ul li:nth-child(2) a").css("border-top", "none")
+  });
+
+  $("#ftse-mib").trigger("click")
+
+  //activate tooltips
+  $('[data-toggle="tooltip"]').tooltip({
+    trigger : 'hover',
+    'delay': { show: 500, hide: 0 }
+  });  
+</script>    

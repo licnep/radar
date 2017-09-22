@@ -1,0 +1,9 @@
+<?php echo $this->fetch("header.phtml", $data); ?>
+
+<?php if (isset($name)) : ?>
+    <h1>Hello <?= htmlspecialchars($name); ?>!</h1>
+<?php else: ?>
+    <h1>Hello!</h1>
+<?php endif; ?>
+
+<?php echo $this->fetch("footer.phtml", $data); ?>

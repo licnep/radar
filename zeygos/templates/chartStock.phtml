@@ -1,0 +1,350 @@
+<?php
+
+#$codalfa = $_GET['codalfa'];
+#$indicatore = $_GET['indicatore'];
+
+#$data['codalfa'] = "A2A";
+#$data['indicatore'] = "totalturnover";
+$codalfa = "ISP";
+$indicatore = "totalturnover";
+?>  
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/black.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css" type="text/css" media="all" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+
+<div class="panel">
+    <ul id="indicatori" class="nav nav-tabs">
+    <!-- Num.Trade 30	Contr.Medio 30	Market Delta 30	Market Buy % 30	Volatilità	Spread 30	Impatto Book	Impatto Buy	Impatto Sell -->
+    <!-- "totalturnover", "turnover30", "numberoftrades30", "averageturnover30", "marketorderdelta30", "marketbuypercentage30", "standarddeviation", "spread30", "bookimpact30", "bookimpactbuy30", "bookimpactsell30"-->
+      <li role="presentation" id="totalturnover" class="active" onclick="indicatore='totalturnover';get_data();"><a href="#"  data-toggle="tooltip" title="Il corrispettivo, in Euro, degli scambi avvenuti sul titolo da inizio giornata.">Controvalore totale</a></li>
+      <li role="presentation" id="turnover30" ><a href="#" onclick="indicatore='turnover30';get_data()" data-toggle="tooltip" title="Il corrispettivo, in Euro, degli scambi avvenuti sul titolo nell'ultima mezzora.">Controvalore 30min</a></li>
+      <li role="presentation" id="numberoftrades30" ><a href="#" onclick="indicatore='numberoftrades30';get_data()"  data-toggle="tooltip" title="Il numero degli scambi (trade) sul titolo nell'ultima mezzora.">Num. trade</a></li>
+      <li role="presentation" id="averageturnover30" ><a href="#" onclick="indicatore='averageturnover30';get_data()"  data-toggle="tooltip" title="Il controvalore medio del singolo trade nell'ultima mezzora.">Controvalore medio</a></li>
+      <li role="presentation" id="marketbuypercentage30" ><a href="#" onclick="indicatore='marketbuypercentage30';get_data()"  data-toggle="tooltip" title="La percentuale degli acquisti al meglio rispetto al totale. Il 100% indica una presenza di soli acquisti nell'ultima mezzora, mentre lo 0%, al contrario, di sole vendite.">Buy %</a></li>
+      <li role="presentation" id="standarddeviation" ><a href="#" onclick="indicatore='standarddeviation';get_data()"  data-toggle="tooltip" title="Una misura della variazione percentuale del titolo. Una percentuale più alta dello storico indica una variazione giornaliera del titolo superiore alla media.">Volatilità</a></li>
+      <li role="presentation" id="spread30" ><a href="#" onclick="indicatore='spread30';get_data()"  data-toggle="tooltip" title="La distanza delle quotazioni denaro-lettera. Uno spread di 1 è la minima distanza possibile, ed equivale a un tick. Uno spread di 2 equivale a una distanza tra denaro-lettera di 2 tick e così via.">Spread</a></li>
+      <li role="presentation" id="bookimpactbuy30" ><a href="#" onclick="indicatore='bookimpactbuy30';get_data()"  data-toggle="tooltip" title="Una misura della pressione dei compratori sulla lettera (il lato del book in cui sono presenti i venditori). Tanto più il valore sarà distante da 1, tanto più il compratore tenderà a comprare anche oltre il primo livello della lettera.">Impatto buy</a></li>
+      <li role="presentation" id="bookimpactsell30" ><a href="#" onclick="indicatore='bookimpactsell30';get_data()"  data-toggle="tooltip" title="Una misura della pressione dei venditori sul denaro (il lato del book in cui sono presenti i compratori). Tanto più il valore sarà distante da 1, tanto più il venditore tenderà a vendere anche oltre il primo livello del denaro.">Impatto sell</a></li>
+    </ul>
+    <div style="padding-top:20px;padding-bottom:20px;margin-right: 160px;">
+        <h3 id="ticker" style="margin-left:50px;display:inline">A2A</h3>
+        <input type="text" id="datepicker">
+        <div id="chartdiv" style="width:100%;min-height:500px;"></div>
+        <div id="loading" style="width:100%;min-height:500px;text-align:center;z-index:10;position:absolute;top:0;left:0"><i class = "fa fa-circle-o-notch fa-5x fa-spin" style="margin-top:250px"></i></div>
+    </div>
+</div>
+
+<!-- Chart code -->
+<script>
+
+<?php if (!$subscription || $subscription['subscription_status'] == 'terminated') { ?>
+
+var maxTimestamp = true;
+
+<?php  } else { ?>
+
+var maxTimestamp = false;
+
+<?php  }?>
+
+var chart = AmCharts.makeChart("chartdiv", {
+    "type": "serial",
+    "listeners": [{
+      "event": "rendered",
+      "method": handleRender
+      }, {
+      "event": "zoomed",
+      "method": handleZoom
+    }],
+    "theme": "black",
+    "backgroundColor": "#121212",
+    "legend": {
+        //"useGraphSettings": true,
+        "position":"top",
+        "valueText": "",
+        "autoMargins": false,
+        "marginLeft":100,
+        "markerSize":20,
+        "markerType":"line",
+        "markerBorderThickness":3
+    },
+    //"backgroundAlpha": 1,
+    "marginRight": 40,
+    "marginLeft": 90,
+    "autoMarginOffset": 20,
+    "mouseWheelZoomEnabled":true,
+    "dataDateFormat": "YYYY-MM-DD HH:NN:SS",
+    "valueAxes": [{
+        "id": "v1",
+        "axisAlpha": 0,
+        "position": "left",
+        "ignoreAxisWidth":true
+    }, {
+        "id":"v2",
+        "axisColor": "#333",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "right",
+        "unit": "€",
+        "unitPosition": "left",
+        "gridAlpha": 0,
+    }],
+    /*"balloon": {
+        "borderThickness": 1,
+        "shadowAlpha": 0
+    },*/
+    "graphs": [{
+        "id": "gPrice",
+        "valueAxis": "v2",
+        "lineColor": "#333",
+        "fillAlphas": 0.2,
+        /*"balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },*/
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 1,
+        "title": "prezzo",
+        "useLineColorForBulletBorder": true,
+        "valueField": "price",
+        //"balloonText": "<span style='font-size:18px;'>[[indicatore]]</span>"
+    },{
+        "id": "g1",
+        "valueAxis": "v1",
+        "lineColor": "#00a0cf", //#00d0ff
+        /*"balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },*/
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "indicatore",
+        "useLineColorForBulletBorder": true,
+        "valueField": "indicatore",
+        //"balloonText": "<span style='font-size:18px;'>[[indicatore]]</span>"
+    },{
+        "id": "g2",
+        "valueAxis": "v1",
+        "lineColor": "#00487b",
+        /*"balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },*/
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "storico",
+        "useLineColorForBulletBorder": true,
+        "valueField": "storico",
+        //"balloonText": "<span style='font-size:18px;'>[[storico]]</span>"
+    }],
+    /*"chartScrollbar": {
+        "graph": "g1",
+        "oppositeAxis":false,
+        "offset":30,
+        "scrollbarHeight": 80,
+        "backgroundAlpha": 0,
+        "selectedBackgroundAlpha": 0.1,
+        "selectedBackgroundColor": "#888888",
+        "graphFillAlpha": 0,
+        "graphLineAlpha": 0.5,
+        "selectedGraphFillAlpha": 0,
+        "selectedGraphLineAlpha": 1,
+        "autoGridCount":true,
+        "color":"#AAAAAA"
+    },
+    "chartScrollbarSettings": {
+    "graph": "g1",
+    "usePeriod": "ss",
+    "position": "top"
+  },*/
+    "chartCursor": {
+        //"pan": true,
+        "valueLineEnabled": true,
+        "valueLineBalloonEnabled": true,
+        "cursorAlpha":1,
+        "cursorColor":"#258cbb",
+        "limitToGraph":"g1",
+        "valueLineAlpha":0.2,
+        "valueZoomable":true,
+        "categoryBalloonDateFormat": "JJ:NN", //, DD MMMM",
+        //"cursorPosition": "mouse"
+    },
+    /*"valueScrollbar":{
+      "oppositeAxis":false,
+      "offset":50,
+      "scrollbarHeight":10
+    },*/
+    "categoryField": "date",
+    "categoryAxis": {
+        "parseDates": true,
+        "dashLength": 1,
+        //"minorGridEnabled": true,
+        "minPeriod": "ss",
+        "centerLabelOnFullPeriod": false,
+    },
+    "categoryAxesSettings": {
+        "minPeriod": "ss"
+    },
+    "export": {
+        "enabled": true
+    },
+    "dataProvider": []
+});
+
+function handleRender() {
+    //$("a[title='JavaScript charts']").css("display","none");
+}
+ 
+function handleZoom() {
+    //$("a[title='JavaScript charts']").css("display","none");
+}
+    
+    
+    
+   
+    
+    
+    
+var indicatore = "totalturnover";
+var codalfa = "A2A";
+
+function dl_data() {
+    var timestamp = Math.floor(picker.getDate()/1000);
+    var url_ = "";
+    if (maxTimestamp) {
+        url_ = "http://auroraft.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp+"&maxTimestamp="+Math.floor(Date.now()/1000 - 30*60);
+    } else {
+        url_ = "http://auroraft.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp;
+    }
+    console.log(url_);
+    $.ajax({
+      url: url_,
+      dataType: "jsonp",
+      success: function( data ) {
+        console.log("GOT DATA!");
+        var all_data = data['data'];
+        console.log(all_data);
+        chart.dataProvider = all_data;
+        //chart.ignoreZoomed = true;
+        chart.validateData();
+        //chart.ignoreZoomed = true;
+        chart.validateNow(); //also changes the title etc.
+        $("#loading").hide();
+      }
+    });
+}
+
+function get_data(hideLoading = false) {
+    if (!hideLoading)
+        $("#loading").show();
+    $('#ticker').text(codalfa);
+    //chart.panels[0].title = codalfa + " - " + indicatore;
+    $('#indicatori li').removeClass('active');
+    $('#'+indicatore).addClass('active');
+    dl_data();
+
+}
+
+var picker = null;
+
+//get latest day of trading:
+$.ajax({
+      url: "http://www.auroraft.com/json_api2.php?codalfa=A2A&indicatore=totalturnover",
+      dataType: "jsonp",
+      success: function( data ) {
+        last_trade = data['data'][data['data'].length-1]['date'];
+        console.log(last_trade)
+        console.log(new Date(last_trade));
+        last_trade = new Date(last_trade);
+
+        //initialize date picker
+       //datepicker:
+        picker = new Pikaday({ 
+            field: $('#datepicker')[0],
+            theme: 'dark-theme',
+            defaultDate: last_trade,
+            setDefaultDate: true,
+            minDate: new Date(Date.now()-1000*60*60*24*14),
+            maxDate: new Date(Date.now()+1000*60),
+            disableWeekends: true,
+            firstDay: 1,
+            i18n: {
+                previousMonth : 'Mese Precedente',
+                nextMonth     : 'Mese Successivo',
+                months        : ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
+                weekdays      : ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Vederdì','Sabato'],
+                weekdaysShort : ['Dom','Lun','Mar','Mer','Gio','Ven','Sab']
+            },
+            format: 'dddd DD/MM/YYYY',
+            onSelect: function() {get_data()}
+        });
+
+        get_data();
+
+        setInterval( function() {
+          get_data(true);
+        }, 15000 );
+
+      }
+    });
+
+    
+//get_data();
+    
+/*
+setInterval( function() {
+  get_data(true);
+}, 15000 );
+*/
+
+/*
+//prevent zoom reset when getting new data:
+
+chart.ignoreZoomed = false;
+chart.addListener("zoomed", function(event) {
+  console.log("zoomed!");
+  console.log(chart.ignoreZoomed);
+  if (chart.ignoreZoomed) {
+    chart.ignoreZoomed = false;
+    return;
+  }
+  chart.zoomStartDate = event.startDate;
+  chart.zoomEndDate = event.endDate;
+
+});
+
+chart.addListener("dataUpdated", function(event) {
+  if (chart.hasOwnProperty("zoomStartDate")) {
+      console.log(chart.zoomStartDate);
+      chart.zoomToDates(chart.zoomStartDate, chart.zoomEndDate);
+  }
+});*/
+
+
+
+
+    
+</script>
+

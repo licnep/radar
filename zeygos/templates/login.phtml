@@ -1,0 +1,91 @@
+<?php echo $this->fetch("header.phtml", $data); ?>
+
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-5">
+        <h2>Login</h2>
+    </div>
+</div><!--row-->
+
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-5">
+
+        <a class="btn btn-block btn-social btn-facebook home-top" tabindex="1" id="loginFacebook">
+            <span class="fa fa-facebook"></span> Accedi con Facebook
+            <input id="facebook_app_id" value="<?php echo $facebookAppId; ?>" type="hidden">
+            <input id="facebook_auth_url" value="<?php echo $www; ?>auth/facebook" type="hidden">
+            <input type="hidden" name="user_facebook_id" id="user_facebook_id">
+            <script type="text/javascript" src="<?php echo $www?>public/js/facebook-login.js"></script>
+        </a>
+        <label id="facebook-alert" class="error"style="display: none;"></label>
+
+        <div id="loginOptions">
+            <h2><span class="login-choice">or</span>
+            <div class="hidden login-choice-text">Sign in with</div></h2>
+        </div>
+
+        <form id="login-form" action="<?php echo $www?>login" accept-charset="UTF-8" method="POST" role="form">
+            <div class="form-group">
+                <label class="control-label" for="email">Email*</label>
+                <input type="email" id="email" class="form-control" name="email"
+                       maxlength="255" placeholder="john@example.com" tabindex="2" value="<?=isset($input['email']) ? $input['email'] : '';?>">
+                <?php if (isset($errors['email'][0])) { ?>
+                    <label id="email_error" class="error" for="email">
+                        <?php echo $errors['email'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label full-width" for="password">
+                    Password*&nbsp;
+                    <span class="pull-right itemHide forgot">
+                        <a href="<?php echo $www?>password-reset-request" tabindex="5">Password dimenticata?</a>
+                    </span>
+                </label>
+                <input type="password" id="password" class="form-control"
+                       name="password" placeholder="********" tabindex="3" value="<?=isset($input['password']) ? $input['password'] : '';?>">
+                <?php if (isset($errors['password'][0])) { ?>
+                    <label id="password_error" class="error" for="password">
+                        <?php echo $errors['password'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-lg btn-success btn-block" tabindex="4" name="login-button">Accedi</button>
+
+            </div>
+
+        </form>
+    </div>
+</div><!--row-->
+
+<script type="text/javascript">activateParticles();</script>
+<script src="<?php echo $www?>public/js/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $().ready(function () {
+
+        // Form validation on keyup and submit
+        $("#login-form").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            messages: {
+                email: "Please enter a valid email address.",
+                password: {
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 6 characters long."
+                }
+            }
+        });
+    });
+</script>
+
+<?php echo $this->fetch("footer.phtml", $data); ?>

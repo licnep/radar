@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <link rel="shortcut icon" href="<?php echo $www?>favicon.ico" type="image/x-icon">
+    <title><?=isset($title) ? $title : "Hello"?></title>
+
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="public/css/bootstrap.min.css">
+  
+    <link href="<?php echo $www?>public/css/site.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:600" rel="stylesheet">
+
+    <?php if(!isset($user) || empty($user)) { ?>
+    <link href="<?php echo $www?>public/css/bootstrap-social.css" rel="stylesheet">
+    <?php } ?>
+
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css" />
+
+    <script src="<?php echo $www?>public/js/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/it.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+    <nav id="level1" class="navbar-inverse navbar-fixed-top navbar" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#level1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="<?php echo $www?>">Zeygos Radar <!--<span style="color:#555"> BETA</span>--></a>
+            </div><!--navbar-header-->
+
+            <div id="level1-collapse" class="collapse navbar-collapse">
+                <ul id="level2" class="navbar-nav navbar-right nav">
+                    <?php if(isset($user) && !empty($user)) { ?>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                                Account <b class="caret"></b>
+                            </a>
+                            <ul id="w3" class="dropdown-menu">
+                                <li><a href="<?php echo $www?>dashboard" tabindex="-1">Dashboard</a></li>
+                                <li><a href="<?php echo $www?>subscription" tabindex="-1">Subscription</a></li>
+                                <li><a href="<?php echo $www?>change-password" tabindex="-1">Change Password</a></li>
+                                <li><a href="<?php echo $www?>logout" tabindex="-1">Logout (<?php echo $user['email']; ?>)</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } else { ?>
+                        <li <?=(isset($menu) && $menu=='register' ? 'class="active"' : '')?>><a href="<?php echo $www?>register">Registrati</a></li>
+                        <li <?=(isset($menu) && $menu=='login' ? 'class="active"' : '')?>><a href="<?php echo $www?>login">Login</a></li>
+                    <?php } ?>
+                </ul>
+            </div><!--navbar-collapse-->
+        </div><!--container-->
+    </nav>
+
+    <div class="container">
+
+    <?php if ($flash->getMessage('info')) { ?>
+        <div class="alert alert-info">
+            <?php echo implode('<br>', $flash->getMessage('info')); ?>
+        </div>
+    <?php } ?>
+
+    <?php if ($flash->getMessage('success')) { ?>
+        <div class="alert alert-success">
+            <?php echo implode('<br>', $flash->getMessage('success')); ?>
+        </div>
+    <?php } ?>
+
+    <?php if ($flash->getMessage('error')) { ?>
+        <div class="alert alert-danger">
+            <?php echo implode('<br>', $flash->getMessage('error')); ?>
+        </div>
+    <?php } ?>
+
+<!-- particles js-->
+<script src="public/js/particles.min.js"></script>
+<script type="text/javascript">
+
+function activateParticles() {
+    //$('<div id="particles-js" style="position:fixed;left:0;top:0;width:100%;height:100%;"></div>').appendTo('body');
+    $('<div id="particles-js" style="position:fixed;left:0;top:0;width:100%;height:100%;"></div>').insertAfter('#level1');
+    particlesJS('particles-js',
+    {
+      "particles": {
+        "number": {
+          "value": 60,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#ffffff"
+        },
+        "shape": {
+          "type": "triangle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          },
+          "polygon": {
+            "nb_sides": 5
+          },
+          "image": {
+            "src": "img/github.svg",
+            "width": 100,
+            "height": 100
+          }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 40,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 200,
+          "color": "#ffffff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "onclick": {
+            "enable": false,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 400,
+            "line_linked": {
+              "opacity": 1
+            }
+          },
+          "bubble": {
+            "distance": 400,
+            "size": 40,
+            "duration": 2,
+            "opacity": 8,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 63.93606393606394,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    }
+    , function() {
+      console.log('callback - particles.js config loaded');
+    });
+}
+</script>
+
+<!-- /particles -->

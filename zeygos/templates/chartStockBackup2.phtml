@@ -1,0 +1,196 @@
+<?php
+
+#$codalfa = $_GET['codalfa'];
+#$indicatore = $_GET['indicatore'];
+
+#$data['codalfa'] = "A2A";
+#$data['indicatore'] = "totalturnover";
+$codalfa = "A2A";
+$indicatore = "totalturnover";
+?>  
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/black.js"></script>
+
+<div class="panel">
+    <ul id="indicatori" class="nav nav-tabs">
+    <!-- Num.Trade 30	Contr.Medio 30	Market Delta 30	Market Buy % 30	Volatilità	Spread 30	Impatto Book	Impatto Buy	Impatto Sell -->
+    <!-- "totalturnover", "turnover30", "numberoftrades30", "averageturnover30", "marketorderdelta30", "marketbuypercentage30", "standarddeviation", "spread30", "bookimpact30", "bookimpactbuy30", "bookimpactsell30"-->
+      <li role="presentation" id="totalturnover" class="active" onclick="indicatore='totalturnover';get_data();"><a href="#">Controvalore totale</a></li>
+      <li role="presentation" id="turnover30" ><a href="#" onclick="indicatore='turnover30';get_data()">Controvalore30</a></li>
+      <li role="presentation" id="numberoftrades30" ><a href="#" onclick="indicatore='numberoftrades30';get_data()"># Trades</a></li>
+      <li role="presentation" id="averageturnover30" ><a href="#" onclick="indicatore='averageturnover30';get_data()">Controvalore medio</a></li>
+      <li role="presentation" id="marketbuypercentage30" ><a href="#" onclick="indicatore='marketbuypercentage30';get_data()">Buy %</a></li>
+      <li role="presentation" id="standarddeviation" ><a href="#" onclick="indicatore='standarddeviation';get_data()">Volatilità</a></li>
+      <li role="presentation" id="spread30" ><a href="#" onclick="indicatore='spread30';get_data()">Spread</a></li>
+      <li role="presentation" id="bookimpactbuy30" ><a href="#" onclick="indicatore='bookimpactbuy30';get_data()">Impatto buy</a></li>
+      <li role="presentation" id="bookimpactsell30" ><a href="#" onclick="indicatore='bookimpactsell30';get_data()">Impatto sell</a></li>
+    </ul>
+    <div style="padding-top:20px;padding-bottom:20px;margin-right: 160px;">
+        <div id="chartdiv" style="width:100%;min-height:500px;"></div>
+    </div>
+</div>
+
+<!-- Chart code -->
+<script>
+var chart = AmCharts.makeChart("chartdiv", {
+    "type": "serial",
+    "listeners": [{
+      "event": "rendered",
+      "method": handleRender
+      }, {
+      "event": "zoomed",
+      "method": handleZoom
+    }],
+    "theme": "black",
+    "marginRight": 40,
+    "marginLeft": 90,
+    "autoMarginOffset": 20,
+    "mouseWheelZoomEnabled":true,
+    "dataDateFormat": "YYYY-MM-DD HH:NN:SS",
+    "valueAxes": [{
+        "id": "v1",
+        "axisAlpha": 0,
+        "position": "left",
+        "ignoreAxisWidth":true
+    }],
+    "balloon": {
+        "borderThickness": 1,
+        "shadowAlpha": 0
+    },
+    "graphs": [{
+        "id": "g1",
+        "balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "red line",
+        "useLineColorForBulletBorder": true,
+        "valueField": "value",
+        "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+    },{
+        "id": "g2",
+        "balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "blue line",
+        "useLineColorForBulletBorder": true,
+        "valueField": "value2",
+        "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+    }],
+    /*"chartScrollbar": {
+        "graph": "g1",
+        "oppositeAxis":false,
+        "offset":30,
+        "scrollbarHeight": 80,
+        "backgroundAlpha": 0,
+        "selectedBackgroundAlpha": 0.1,
+        "selectedBackgroundColor": "#888888",
+        "graphFillAlpha": 0,
+        "graphLineAlpha": 0.5,
+        "selectedGraphFillAlpha": 0,
+        "selectedGraphLineAlpha": 1,
+        "autoGridCount":true,
+        "color":"#AAAAAA"
+    },
+    "chartScrollbarSettings": {
+    "graph": "g1",
+    "usePeriod": "ss",
+    "position": "top"
+  },*/
+    "chartCursor": {
+        //"pan": true,
+        "valueLineEnabled": true,
+        "valueLineBalloonEnabled": true,
+        "cursorAlpha":1,
+        "cursorColor":"#258cbb",
+        "limitToGraph":"g1",
+        "valueLineAlpha":0.2,
+        "valueZoomable":true
+    },
+    /*"valueScrollbar":{
+      "oppositeAxis":false,
+      "offset":50,
+      "scrollbarHeight":10
+    },*/
+    "categoryField": "date",
+    "categoryAxis": {
+        "parseDates": true,
+        "dashLength": 1,
+        //"minorGridEnabled": true,
+        "minPeriod": "ss"
+    },
+    "categoryAxesSettings": {
+        "minPeriod": "ss"
+    },
+    "export": {
+        "enabled": true
+    },
+    "dataProvider": [
+        
+    <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "zxcvbnm";
+        $dbname = "hedgefund";   
+
+//        $codalfa = $_GET['codalfa'];
+//        $indicatore = $_GET['indicatore'];
+
+
+
+        // Create connection
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        // Check connection
+        if ($conn->connect_error) {
+             die("Connection failed: " . $conn->connect_error);
+        } 
+
+
+        $sql = "SELECT timestamp, ".$indicatore.", COALESCE((SELECT ".$indicatore." FROM indicatoristorici WHERE timewindow <= TIME(timestamp) AND codalfa='".$codalfa."' ORDER BY timewindow DESC LIMIT 1), 0) AS storico FROM indicatoridaily WHERE codalfa='".$codalfa."' and timestamp>(select DATE_FORMAT((SELECT max(timestamp) FROM indicatoridaily where codalfa='".$codalfa."'), '%Y-%m-%d 09:00:59')) order by timestamp";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo '{"date": "' . $row['timestamp'] . '","value": ' . $row[$indicatore] . ',"value2": ' .  $row['storico'] . "},\n";
+            }
+        } else {
+             echo "0 results";
+        }
+
+        $conn->close();
+    ?>
+ 
+    ]
+});
+
+function handleRender() {
+    //$("a[title='JavaScript charts']").css("display","none");
+}
+ 
+function handleZoom() {
+    //$("a[title='JavaScript charts']").css("display","none");
+}
+    
+</script>
+

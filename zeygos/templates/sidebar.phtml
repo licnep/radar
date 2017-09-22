@@ -1,0 +1,272 @@
+<ul class="nav nav-pills nav-stacked">
+
+<?php
+
+$servername = "localhost";
+$username = "root";
+$password = "zxcvbnm";
+$dbname = "hedgefund";
+
+$lastdate = "";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+     die("Connection failed: " . $conn->connect_error);
+} 
+/*
+$sql = "SELECT DISTINCT(codalfa) FROM indicatoridaily order by codalfa";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $cod = $row['codalfa'];
+        echo "<li><a href=\"#\" onclick=\"codalfa='".$cod."';get_data()\">".$cod.'</a></li>';
+    }
+}
+
+$conn->close();*/
+
+/*function creaLink($codalfa, $indicatore, $dato, $class="") {
+    return "<a href=\"#\" class=\"".$class."\" onClick=\"window.open('chartrapporti.php?codalfa=".$codalfa."&indicatore=".$indicatore."','".$codalfa.$indicatore."','resizable,width=800,height=600,left=300,top=150'); return false;\">".$dato."</a>";
+}*/
+
+
+// Full name arrays
+$midCap = array(
+  "ACE" => "Acea",
+  "ADB" => "Aeroporto Guglielmo Marconi",
+  "AMP" => "Amplifon",
+  "ANIM" => "Anima Holding",
+  "STS" => "Ansaldo STS",
+  "ASC" => "Ascopiave",
+  "AST" => "Astaldi",
+  "AT" => "ASTM",
+  "AGL" => "Autogrill",
+  "IF" => "Banca Ifis",
+  "BPSO" => "Banca Popolare di Sondrio",
+  "BNS" => "Beni Stabili",
+  "BSS" => "Biesse",
+  "BC" => "Brunello Cucinelli",
+  "CAI" => "Cairo Communication",
+  "CASS" => "Cattolica Ass",
+  "CEM" => "Cementir Holding",
+  "CERV" =>  "Cerved Information Solutions",
+  "CIR" => "Cir.Comp Ind Riunite",
+  "CE" => "Credem",
+  "CVAL" => "Credito Valtellinese",
+  "DAN" => "Danieli & C",
+  "DAL" => "Datalogic",
+  "DLG" => "De'Longhi",
+  "DIA" => "Diasorin",
+  "EIT" => "Ei Towers",
+  "ELN" => "El.En.",
+  "ENAV" => "Enav",
+  "ERG" => "Erg",
+  "PRT" => "Esprinet",
+  "FILA" => "Fila",
+  "FCT" => "Fincantieri",
+  "GEO" => "Geox",
+  "HER" => "Hera",
+  "IGD" => "Igd",
+  "IMA" => "I.M.A.",
+  "IP" => "InterPump Group",
+  "INW" => "Inwit",
+  "IRE" => "Iren",
+  "ITM"  =>"Italmobiliare",
+  "JUVE" => "Juventus FC",
+  "MT" => "Maire Tecnimont",
+  "MARR" => "Marr",
+  "MOL" => "Mutui Online",
+  "OVS" => "OVS",
+  "PLT" => "Parmalat",
+  "PIA" => "Piaggio",
+  "RWAY" => "Rai Way",
+  "RCS" => "RCS Mediagroup",
+  "REY" => "Reply",
+  "SFL" => "Safilo Group",
+  "SAL" => "Salini Impregilo",
+  "SRS" => "Saras",
+  "SAVE" => "Save",
+  "SIS" => "Sias",
+  "TIP" => "Tamburi",
+  "TGYM" => "Technogym",
+  "TOD" => "Tod's",
+  "VAS" => "Vittoria Assicurazioni",
+  "ZV" => "Zignago Vetro"
+);
+
+$ftseMib = array(
+  "A2A" => "A2A",
+  "ATL" => "Atlantia",
+  "AZM" => "Azimut",
+  "BGN" => "Banca Generali",
+  "BMED" => "Banca Mediolanum",
+  "BAMI" => "Banco BPM",
+  "BPE" => "BPER Banca",
+  "BRE" => "Brembo",
+  "BZU" => "Buzzi Unicem",
+  "CNHI" => "CNH Industrial",
+  "CPR" => "Campari",
+  "ENEL" => "Enel",
+  "ENI" => "Eni",
+  "EXO" => "Exor",
+  "FCA" => "Fiat Chrysler Automobiles",
+  "RACE" => "Ferrari",
+  "FBK" => "Fineco Bank",
+  "G" => "Generali Assicurazioni",
+  "ISP" => "Intesa Sanpaolo",
+  "IG" => "Italgas",
+  "LDO" => "Leonardo Finmeccanica",
+  "LUX" => "Luxottica Group",
+  "MB" => "Mediobanca",
+  "MONC" => "Moncler",
+  "MS" => "Mediaset",
+  "PRY" => "Prysmian",
+  "PST" => "Poste Italiane",
+  "REC" => "Recordati",
+  "SFER" => "Salvatore Ferragamo",
+  "SPM" => "Saipem",
+  "SRG" => "Snam Rete Gas",
+  "STM" => "STMicroelectronics",
+  "TEN" => "Tenaris",
+  "TIT" => "Telecom Italia",
+  "TRN" => "Terna",
+  "UBI" => "UBI Banca",
+  "UNI" => "Unipol",
+  "US" => "Unipol Sai",
+  "UCG" => "Unicredit",
+  "YNAP" => "Yoox Net-a Porter Group"
+);
+
+$sql = "SELECT * FROM indicatoridaily AS i INNER JOIN (SELECT Max( id ) AS id FROM indicatoridaily GROUP BY codalfa) AS t ON t.id = i.id;";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+
+     // output data of each row
+     while($row = $result->fetch_assoc()) {
+     	
+         if ($row["codalfa"] == "REY") {
+             continue;
+         }
+         
+     	$sql = "SELECT * FROM indicatoristorici WHERE codalfa='".$row["codalfa"]."' AND timewindow < TIME('".$row["timestamp"]."') ORDER BY timewindow DESC LIMIT 1";
+     	$result2 = $conn->query($sql);
+     	$row2 = $result2->fetch_assoc();
+     	//print_r($row2);
+     	
+         //echo "<tr>";
+         //stampaCella($row["codalfa"]);
+         //stampaCella($row["timestamp"]);
+            /*
+         foreach (array("totalturnover", "turnover30", "numberoftrades30", "averageturnover30", "marketorderdelta30", "marketbuypercentage30", "standarddeviation", "spread30", "bookimpact30", "bookimpactbuy30", "bookimpactsell30") as $indicatore) {
+         	if ($row2[$indicatore]==0) {
+         		$valore=0;
+         		$link = creaLink($row["codalfa"], $indicatore, 'TBD' );
+         	} else {
+         		$valore = ($row[$indicatore]-$row2[$indicatore])/$row2[$indicatore];
+                if ($valore>=0) {
+                    $link = creaLink($row["codalfa"], $indicatore, '+' . number_format($valore*100,2).' %' , "green");
+                } else {
+                    $link = creaLink($row["codalfa"], $indicatore, number_format($valore*100,2).' %' , "red");   
+                }
+         	}
+             if (in_array($indicatore, array("totalturnover", "turnover30", "averageturnover30", "marketorderdelta30"))) {
+                 $valore = number_format($valore) . " €"; 
+             }
+             else if ($indicatore == "marketbuypercentage30") {
+                 $valore = number_format($valore*100, 2) . " %"; 
+             }
+             else if ($indicatore == "standarddeviation") {
+                 $valore = number_format($valore*100, 2) . " %"; 
+             }
+             
+             //stampaCella( $link );
+         }*/
+         $summary = 0;
+         if ($row2['totalturnover'] == 0 || $row2['turnover30'] == 0 || $row2['numberoftrades30']==0 || $row2['averageturnover30'] == 0) {
+            $summary = 0;
+         } else {
+             $summary = ($row['totalturnover']-$row2['totalturnover'])/$row2['totalturnover'];
+             $summary += ($row['turnover30']-$row2['turnover30'])/$row2['turnover30'];
+             $summary += ($row['numberoftrades30']-$row2['numberoftrades30'])/$row2['numberoftrades30'];
+             $summary += ($row['averageturnover30']-$row2['averageturnover30'])/$row2['averageturnover30'];
+             $summary = $summary/4;
+         }
+         if ($summary>=0) {
+            echo "<li><a href=\"#\" onclick=\"codalfa='".$row["codalfa"]."';get_data()\"";
+
+             if ( !empty($midCap[ $row["codalfa"] ]) ) {
+              echo " class=\"mid-cap\">".$midCap[ $row["codalfa"] ];
+             } else {
+              echo " class=\"ftse-mib\">".$ftseMib[ $row["codalfa"] ];
+             }
+	    if ($summary>0.70) {
+            	//echo ' <div style="float:right; color:#2B9435"><i class="fa fa-signal" aria-hidden="true" style="font-size: 23px;color:#00d0ff"></i> +'. number_format($summary*100,2).' %' .'</div></a></li>';
+		echo ' <div style="float:right; color:#2B9435"><i class="fa fa-signal" aria-hidden="true" style="font-size: 23px;color:#00d0ff"></i></div></a></li>';
+	    } else if ($summary>0.10) {
+		echo ' <div style="float:right; color:#2B9435"><i class="fa fa-signal" aria-hidden="true" style="font-size: 23px;color:#00487b"></i></div></a></li>';
+	    } else {
+		echo '</a></li>';
+	    }
+         } else {
+            echo "<li><a href=\"#\" onclick=\"codalfa='".$row["codalfa"]."';get_data()\"";
+
+            if ( !empty($midCap[ $row["codalfa"] ]) ) {
+              echo " class=\"mid-cap\">".$midCap[ $row["codalfa"] ];
+            } else {
+              echo " class=\"ftse-mib\">".$ftseMib[ $row["codalfa"] ];
+            }
+
+            //echo ' <div style="float:right; color:#950E0A">'. number_format($summary*100,2).' %' .'</div></a></li>';
+	    echo '</a></li>';
+         }
+     }
+     echo "</table>";
+} else {
+     echo "0 results";
+}
+
+$conn->close();
+
+
+
+
+
+
+?>
+<!--
+  <li class="active"><a href="#" onclick="codalfa='ATL';get_data()">A2A</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>
+  <li><a href="#">ATL</a></li>
+  <li><a href="#">AZM</a></li>-->
+</ul>

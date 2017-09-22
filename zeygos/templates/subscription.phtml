@@ -1,0 +1,43 @@
+<?php echo $this->fetch("header.phtml", $data); ?>
+
+    <ul class="breadcrumb">
+        <li><a href="<?php echo $www?>">Home</a></li>
+        <li class="active">Subscription</li>
+    </ul>
+
+    <div>
+        <div style="padding:50px">
+            <p></p>
+
+                <?php if (!$subscription) { ?>
+            <h4>
+                Non sei iscritto a Market Radar.
+            </h4>
+            <p>
+                <a class="btn btn-success" href="<?php echo $www?>subscription/checkout">Iscriviti adesso</a>
+            </p>
+            <p>
+                Il costo dell'abbonamento è di 20 euro mensili. L'abbonamento può essere disdetto in qualsiasi momento.
+            </p>
+        <?php } elseif ($subscription['subscription_status'] != 'active') { ?>
+            <p>
+                Your subscription is <?php echo strtoupper($subscription['subscription_status']); ?><br>
+                <?php if ($subscription['subscription_status'] == 'cancelled') { ?>
+                    You still have access until <?php echo date('D, j M Y', $subscription['next_payment']); ?>
+                    <!--<a class="btn btn-success" href="<?php echo $www?>subscription/checkout">Iscriviti adesso</a>-->
+                <?php } ?>
+
+            </p>
+        <?php } elseif ($subscription['subscription_status'] == 'active') { ?>
+            <p>
+                Your subscription is <?php echo strtoupper($subscription['subscription_status']); ?><br>
+                Next payment on <?php echo date('D, j M Y', $subscription['next_payment']); ?>
+            </p>
+            <p>
+                <a class="btn btn-danger" href="<?php echo $www?>subscription/cancel" onclick="return confirm('Sei sicuro di voler annullare l abbonamento?')">Annulla l'abbonamento</a>
+            </p>
+        <?php }  ?>
+        </div>
+    </div>
+
+<?php echo $this->fetch("footer.phtml", $data); ?>

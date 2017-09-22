@@ -1,0 +1,442 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('https://fonts.googleapis.com/css?family=Roboto');
+}
+
+html,
+body {
+    height: 100%;
+    background-color: #121212;
+    /*background: url('https://www.toptal.com/designers/subtlepatterns/patterns/congruent_outline.png');*/
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.wrap {
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
+.wrap > .container {
+    padding: 70px 15px 20px;
+}
+.wrap > .container_home {
+    padding: 10px 15px 20px;
+    margin-top:50px;
+}
+.wrap > .navbar {
+    background-color: #24292e;
+}
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
+    background-color: #191e23;
+}
+
+.footer {
+    height: 60px;
+    background-color: #121212;
+    /*background-color: #f5f5f5;
+    border-top: 1px solid #ddd;*/
+    padding-top: 20px;
+}
+.home-top {
+    margin-top:12%;
+}
+.jumbotron {
+    text-align: center;
+    border-radius:5px;
+    /*background: rgba(12, 12, 14, 0.54);*/
+    background: rgba(120, 128, 134, 0.19);
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    opacity:.8;
+    margin:25px 10px;
+}
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+label.error {
+    color:red;
+    font-size: 12px;
+    font-weight: 300;
+}
+.centered {
+    text-align:center;
+    margin: auto; max-width: 300px;
+}
+.hidden {
+    display:none;
+    visible:false;
+}
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+    border-bottom-width:3px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+#loginOptions h2::before {
+    border-top: 1px solid #dfdfdf;
+    bottom: 0;
+    content: "";
+    left: 0;
+    margin: 0 auto;
+    position: absolute;
+    right: 0;
+    top: 17px;
+    width: 100%;
+    z-index: -1;
+}
+
+#loginOptions h2 {
+    font: 23px sans-serif;
+    margin-top: 17px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+#loginOptions h2 {
+    font: 23px sans-serif;
+    margin-top: 17px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+
+#loginOptions h2 span {
+    background: #333 none repeat scroll 0 0;
+    padding: 0 10px;
+}
+.login-choice {
+    font-size: 17px;
+    color: #c2c2c2;
+}
+
+.login-choice-text {
+    clear: both;
+    display: inline;
+    float: left;
+    font-size: 17px;
+    margin: 20px 0 16px;
+    text-align: center;
+    width: 100%;
+}
+
+.forgot > a {
+    font-weight: normal;
+}
+
+.margin-left-none {
+    margin-left:0;
+}
+.padding-left-none {
+    padding-left: 0;
+}
+
+.sidebar {
+  padding: 0px !important;
+}
+
+.btn-active {
+  /*background: #171819 !important;*/
+  background: #212121 !important;
+}
+
+#ftse-mib:active,
+#mid-cap:active {
+  outline: none !important;
+}
+#ftse-mib,
+#mid-cap {
+  transition: 0.5s;
+}
+/* REDESIGN STYLES */
+.panel {
+  padding-right: 0;
+  padding-left: 0;
+  border: 0;
+  background-color: #121212;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.wrap .container:nth-child(2) {
+  padding: 50px 0 0 0;
+}
+
+#level1 {
+  margin-bottom: 0 !important;
+  /*background-color: #272929*/
+  background-color: #121212;
+  border: 0;
+  box-shadow: 0px 1px 15px #000;
+}
+
+.breadcrumb {
+  background: #121212;
+  margin-bottom: 0;
+  border-bottom: 1px solid #343738;
+  border-radius: 0;
+}
+
+.sidebar {
+  height: 80vh !important;
+  margin-bottom: 0;
+  border-right: 1px solid #343738;
+}
+.btn-group .btn {
+  color: #fff;
+  border-radius: 0;
+  background: #0c0c0c;
+  border: 0;
+  height: 50px;
+}
+.btn-group-justified {
+  border-bottom: 1px solid #343738;
+  border-right: 1px solid #343738;
+}
+.sidebar ul {
+  padding-right: 11px;
+  background: #0c0c0c;
+}
+.sidebar ul li {
+  border-radius: 0;
+  /*text-transform: uppercase;*/
+  background: #121212;
+}
+
+.sidebar ul li a {
+  padding: 15px 10px;
+  color: #bbbbbb;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #111;
+}
+.sidebar ul li:first-child a {
+  border-top: none;
+}
+.sidebar ul li:last-child a {
+  border-bottom: none;
+}
+.sidebar .simplebar-scrollbar {
+  background: #1b1c1c;
+}
+
+
+
+.name {
+  min-height: 80px;
+  background: #272929;
+  border-bottom: 3px solid #343738;
+}
+
+
+.graph {
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+  border-bottom: 1px solid #343738;
+}
+
+#indicatori {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 540px;
+  border-bottom: 0;
+  padding: 0 5px;
+  border-left: 1px solid #343738;
+}
+#indicatori li {
+  float: none;
+  display: block !important;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+#indicatori li:first-child {
+  margin-top: 40px;
+}
+#indicatori li a:hover {
+  background: rgba(51, 68, 82, .3);
+}
+#indicatori a {
+  -webkit-clip-path: polygon(10% 0%, 100% 0, 100% 100%, 10% 100%, 0% 50%);
+  clip-path: polygon(10% 0%, 100% 0, 100% 100%, 10% 100%, 0% 50%);
+  border: 0;
+  color: #bbbbbb;
+}
+#indicatori .active a {
+  background: #334452 !important;
+  -webkit-clip-path: polygon(10% 0%, 100% 0, 100% 100%, 10% 100%, 0% 50%);
+  clip-path: polygon(10% 0%, 100% 0, 100% 100%, 10% 100%, 0% 50%);
+  transition: 0.5s;
+}
+.graph .panel #chartdiv {
+  /*padding-right: 160px;*/
+  padding-right: 20px;
+}
+.graph div {
+  margin-bottom: 0;
+}
+
+
+footer {
+  /*background-color: #272929*/
+  background-color: #121212;
+  border-top: 1px solid #343738 !important; 
+}
+
+.amcharts-panels-div a{
+  display: none !important;
+}
+
+a[title='JavaScript charts'] { 
+    z-index: -1000;
+}
+
+.export-main {
+    top: 400px;
+    left: -63px;
+}
+
+.export-main a {
+    opacity: 0.4;
+}
+
+.tooltip {
+    font-size: 14px;
+}
+
+
+/*datepicker dark theme*/
+
+#datepicker {
+    background-color: inherit;
+    border: 0px;
+    margin-left: 50px;
+    vertical-align: super;
+    padding:5px;
+}
+
+/**
+ * This theme is an example to show how you can create your own.
+ */
+.pika-single.dark-theme {
+    color: #fff;
+    background: #333;
+    border: 1px solid #666;
+    border-bottom-color: #999;
+}
+
+.dark-theme .pika-label {
+    background-color: #333;
+}
+
+.dark-theme .pika-prev,
+.dark-theme .is-rtl .pika-next {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAQAAACGG/bgAAAAQ0lEQVR4Ae3KIQ4AIBTD0N0/IeHGI3UIRA3ut/Zl+ltXc5++htVAmIAwAWECwgSEKbgthEoIlRAqIVRCqINQB9nDgQd7ktwFo6UpWQAAAABJRU5ErkJggg==');
+}
+
+.dark-theme .pika-next,
+.dark-theme .is-rtl .pika-prev {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAQAAACGG/bgAAAAP0lEQVQ4y+3TMQoAMAgEwfwfAvvjTZ1uGzuvHhBPPGczEG+FRqqRaqQaqUaqkX6QBmmjacvQ6qEVTjsh+xizebvlaWptGXZAAAAAAElFTkSuQmCC');
+}
+
+.dark-theme .pika-table th {
+    color: #999;
+}
+
+.dark-theme .pika-button {
+    color: #fff;
+    background: #222;
+}
+
+.dark-theme .pika-week {
+    color: #999;
+}
+
+.dark-theme .is-today .pika-button {
+    color: #33aaff;
+}
+
+.dark-theme .is-selected .pika-button {
+    color: #fff;
+    background: #33aaff;
+    box-shadow: inset 0 1px 3px #178fe5;
+}
+
+.dark-theme .is-disabled .pika-button {
+    color: #666;
+    background: #111;
+    opacity: .3;
+}
+
+.dark-theme .pika-button:hover {
+    color: #fff !important;
+    background: #0080ff !important;
+}
+
+
+#rss-feeds {
+    font-size: 16px;
+    height: 200px;
+    overflow: hidden;
+}
+
+#rss-feeds li {
+    padding: 5px;
+    border-bottom: 1px solid #222;
+}
+
+#rss-feeds a {
+    color: #ccc;
+}
+
+.upper {
+    text-transform: uppercase;
+}
+
+/* iphone 5 and small as */
+@media only screen
+and (max-device-width: 320px)
+and (-webkit-min-device-pixel-ratio: 2) {
+    /**/
+}
+
+/* page width */
+@media (min-width: 992px) {
+    .container {
+/*        width: 970px !important;*/
+        width: 100%;
+    }
+}
+
+/* ----------- mobile displays ----------- */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 667px)
+and (-webkit-min-device-pixel-ratio: 2) {
+
+    /* hides drop down menu items and footer items */
+    .itemHide,li.menuHide {
+        display:none;
+    }
+    /* removes home and / from breadcrumb */
+    ul.breadcrumb li:first-child, li.tabHide {
+        display:none;
+        visible:false;
+    }
+    ul.breadcrumb li:nth-child(2)::before {
+        content:'';
+    }
+    .btn {
+        min-width: 55px;
+    }
+}

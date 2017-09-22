@@ -1,0 +1,136 @@
+<?php echo $this->fetch("header.phtml", $data); ?>
+
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-5">
+        <h2>Registrazione</h2>
+    </div>
+</div><!--row-->
+
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-5">
+
+        <a class="btn btn-block btn-social btn-facebook home-top" tabindex="1" id="loginFacebook">
+            <span class="fa fa-facebook"></span> Accedi con Facebook
+            <input id="facebook_app_id" value="<?php echo $facebookAppId; ?>" type="hidden">
+            <input id="facebook_auth_url" value="<?php echo $www; ?>auth/facebook" type="hidden">
+            <input type="hidden" name="user_facebook_id" id="user_facebook_id">
+            <script type="text/javascript" src="<?php echo $www?>public/js/facebook-login.js"></script>
+        </a>
+        <label id="facebook-alert" class="error"style="display: none;"></label>
+
+        <div id="loginOptions">
+            <h2><span class="login-choice">or</span>
+                <div class="hidden login-choice-text">Sign up with</div></h2>
+        </div>
+
+        <form id="register-form" action="<?php echo $www?>register" accept-charset="UTF-8" method="POST" role="form">
+            <div class="form-group">
+                <label class="control-label" for="first_name">Nome*</label>
+                <input type="text" id="first_name" class="form-control" name="first_name"
+                       maxlength="255" placeholder="John" tabindex="2" value="<?=isset($input['first_name']) ? $input['first_name'] : '';?>">
+                <?php if (isset($errors['first_name'][0])) { ?>
+                    <label id="first_name_error" class="error" for="first_name">
+                        <?php echo $errors['first_name'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="last_name">Cognome*</label>
+                <input type="text" id="last_name" class="form-control" name="last_name"
+                       maxlength="255" placeholder="Smith" tabindex="3" value="<?=isset($input['last_name']) ? $input['last_name'] : '';?>">
+                <?php if (isset($errors['last_name'][0])) { ?>
+                    <label id="last_name_error" class="error" for="last_name">
+                        <?php echo $errors['last_name'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="email">Email*</label>
+                <input type="email" id="email" class="form-control" name="email"
+                       maxlength="255" placeholder="john@example.com" tabindex="4" value="<?=isset($input['email']) ? $input['email'] : '';?>">
+                <?php if (isset($errors['email'][0])) { ?>
+                    <label id="email_error" class="error" for="email">
+                        <?php echo $errors['email'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="password">Password*</label>
+                <input type="password" id="password" class="form-control"
+                       name="password" placeholder="********" tabindex="5" value="<?=isset($input['password']) ? $input['password'] : '';?>">
+                <?php if (isset($errors['password'][0])) { ?>
+                    <label id="password_error" class="error" for="password">
+                        <?php echo $errors['password'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="confirm_password">Conferma Password*</label>
+                <input type="password" id="confirm_password" class="form-control"
+                       name="confirm_password" placeholder="********" tabindex="6" value="<?=isset($input['confirm_password']) ? $input['confirm_password'] : '';?>">
+                <?php if (isset($errors['confirm_password'][0])) { ?>
+                    <label id="confirm_password_error" class="error" for="confirm_password">
+                        <?php echo $errors['confirm_password'][0]; ?>
+                    </label>
+                <?php } ?>
+            </div>
+
+            <div class="form-group">
+                <p>
+                    <small>Cliccando su "Registrati" dichiari di aver preso visione e di aver accettato i <a target="_blank" href="<?php echo $www?>terms">Termini di utilizzo</a> e l&rsquo;<a target="_blank" href="<?php echo $www?>privacy">Informativa sulla Privacy</a>.</small>
+                </p>
+
+                <button type="submit" class="btn btn-lg btn-success btn-block" name="register-button" tabindex="7">Registrati</button>
+            </div>
+
+        </form>
+    </div>
+</div><!--row-->
+
+<script type="text/javascript">activateParticles();</script>
+<script src="<?php echo $www?>public/js/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $().ready(function () {
+
+        // Form validation on keyup and submit
+        $("#register-form").validate({
+            rules: {
+                first_name: {
+                    required: true
+                },
+                last_name: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                confirm_password: {
+                    required: true,
+                    minlength: 6,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                first_name: "Please enter your first name.",
+                last_name: "Please enter your last name.",
+                email: "Please enter a valid email address.",
+                password: {
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 6 characters long."
+                },
+                confirm_password: {
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 6 characters long.",
+                    equalTo: "Please enter the same password as above."
+                }
+            }
+        });
+    });
+</script>
+
+<?php echo $this->fetch("footer.phtml", $data); ?>
