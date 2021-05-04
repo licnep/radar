@@ -6,7 +6,13 @@ Source code for the market radar software, to produce historical charts on itali
 
 # Installation
 
+## On a webserver:
+
 1) Setup a LAMP server (Linux, Apache, Mysql, PHP)
 2) Clone the repository and move it to the Apache root directory (usually /var/www/html)
+
+## On a local machine:
+
+Download and install the latest executable artifact from https://github.com/licnep/radar/releases
 
 Enjoy!
