@@ -1,4 +1,4 @@
-RewriteEngine On
+RewriteEngine On 
 RewriteBase /zeygos/
 
 RewriteCond %{REQUEST_FILENAME} !-f
