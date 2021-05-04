@@ -1,6 +1,6 @@
 # Radar
 
-Source code for the market radar software, to produce historical charts on italian stocks.
+The market radar software allows you to produce historical charts on italian stocks, analyzing price, volume and book information.
 
 ![Chart sample](https://snipboard.io/LcHDqd.jpg)
 
