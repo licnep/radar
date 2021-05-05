@@ -11,7 +11,7 @@
         "slim/php-view": "^2.0",
         "respect/validation": "^1.0",
         "monolog/monolog": "^1.17",
-        "phpmailer/phpmailer": "~5.2",
+        "phpmailer/phpmailer": "~6.1",
         "hashids/hashids": "^2.0"
     },
     "autoload": {
