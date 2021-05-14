@@ -234,7 +234,7 @@ function dl_data() {
     var timestamp = Math.floor(picker.getDate()/1000);
     var url_ = "";
     if (maxTimestamp) {
-        url_ = "http://radar.zeygos.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp+"&maxTimestamp="+Math.floor(Date.now()/1000 - 30*60);
+        url_ = "http://radar.zeygos.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp+"&maxTimestamp="+Math.floor(Date.now()/1000 - 60*60);
     } else {
         url_ = "http://radar.zeygos.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp;
     }
