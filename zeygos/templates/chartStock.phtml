@@ -234,9 +234,9 @@ function dl_data() {
     var timestamp = Math.floor(picker.getDate()/1000);
     var url_ = "";
     if (maxTimestamp) {
-        url_ = "http://auroraft.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp+"&maxTimestamp="+Math.floor(Date.now()/1000 - 30*60);
+        url_ = "http://radar.zeygos.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp+"&maxTimestamp="+Math.floor(Date.now()/1000 - 30*60);
     } else {
-        url_ = "http://auroraft.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp;
+        url_ = "http://radar.zeygos.com/json_api2.php?codalfa="+codalfa+"&indicatore="+indicatore+"&timestamp="+timestamp;
     }
     console.log(url_);
     $.ajax({
@@ -271,7 +271,7 @@ var picker = null;
 
 //get latest day of trading:
 $.ajax({
-      url: "http://www.auroraft.com/json_api2.php?codalfa=A2A&indicatore=totalturnover",
+      url: "http://radar.zeygos.com/json_api2.php?codalfa=A2A&indicatore=totalturnover",
       dataType: "jsonp",
       success: function( data ) {
         last_trade = data['data'][data['data'].length-1]['date'];

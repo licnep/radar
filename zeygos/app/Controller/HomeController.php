@@ -18,7 +18,7 @@ class HomeController extends BaseController
      */
     public function getDashboard($request, $response, $args)
     {
-        $args['title'] = "Dashboard";
+        $args['title'] = "Zeygos Radar";
 
         $userModel = new UserModel($this);
         $args['subscription'] = $userModel->getCurrentSubscription($this->user['id']);

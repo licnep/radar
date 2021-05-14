@@ -87,10 +87,13 @@ $midCap = array(
   "REY" => "Reply",
   "SFL" => "Safilo Group",
   "SAL" => "Salini Impregilo",
+  "SG" => "SAES Getters",
   "SRS" => "Saras",
   "SAVE" => "Save",
   "SIS" => "Sias",
+  "SO" => "Sogefi",
   "TIP" => "Tamburi",
+  "TFI" => "Trevi Finanziaria",
   "TGYM" => "Technogym",
   "TOD" => "Tod's",
   "VAS" => "Vittoria Assicurazioni",
@@ -148,7 +151,7 @@ if ($result->num_rows > 0) {
      // output data of each row
      while($row = $result->fetch_assoc()) {
      	
-         if ($row["codalfa"] == "REY") {
+         if (in_array($row["codalfa"], array("REY","FILA","ADB"."SAVE"))) {
              continue;
          }
          
@@ -203,10 +206,10 @@ if ($result->num_rows > 0) {
              } else {
               echo " class=\"ftse-mib\">".$ftseMib[ $row["codalfa"] ];
              }
-	    if ($summary>0.70) {
+	    if ($summary>0.75) {
             	//echo ' <div style="float:right; color:#2B9435"><i class="fa fa-signal" aria-hidden="true" style="font-size: 23px;color:#00d0ff"></i> +'. number_format($summary*100,2).' %' .'</div></a></li>';
 		echo ' <div style="float:right; color:#2B9435"><i class="fa fa-signal" aria-hidden="true" style="font-size: 23px;color:#00d0ff"></i></div></a></li>';
-	    } else if ($summary>0.10) {
+	    } else if ($summary>0.15) {
 		echo ' <div style="float:right; color:#2B9435"><i class="fa fa-signal" aria-hidden="true" style="font-size: 23px;color:#00487b"></i></div></a></li>';
 	    } else {
 		echo '</a></li>';
